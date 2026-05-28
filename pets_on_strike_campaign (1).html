@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pets On Strike — Feed the Revolution · Campaign System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0D0D0D;
+    --white: #F5F2EB;
+    --gray-light: #E0DDD6;
+    --gray-mid: #9E9B94;
+    --gray-dark: #3A3A38;
+    --paper: #EAE7DE;
+    --accent: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 52px;
+    border-bottom: 1px solid #222;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+  }
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a {
+    display: block;
+    padding: 0 14px;
+    height: 52px;
+    line-height: 52px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+    border-left: 1px solid #1a1a1a;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── SECTIONS ── */
+  section {
+    min-height: 100vh;
+    padding: 120px 60px 80px;
+    border-bottom: 1px solid var(--gray-light);
+    position: relative;
+  }
+  section:nth-child(even) { background: var(--paper); }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 8vw, 108px);
+    letter-spacing: 0.03em;
+    line-height: 0.9;
+    color: var(--black);
+    margin-bottom: 56px;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28vw;
+    color: #fff;
+    opacity: 0.025;
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.02em;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 180px);
+    color: var(--white);
+    line-height: 0.85;
+    letter-spacing: 0.02em;
+  }
+  .hero-name .crossed {
+    position: relative;
+    display: inline-block;
+  }
+  .hero-name .crossed::after {
+    content: '';
+    position: absolute;
+    left: -2px; right: -2px;
+    top: 50%; transform: translateY(-50%);
+    height: 7px;
+    background: var(--white);
+  }
+  .hero-campaign {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(20px, 3vw, 36px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--white);
+    opacity: 0.5;
+    margin-top: 24px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid #222;
+  }
+  .hero-stat { }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+  .hero-stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+  .card {
+    background: var(--black);
+    color: var(--white);
+    padding: 36px 28px;
+    position: relative;
+  }
+  .card.light {
+    background: var(--white);
+    color: var(--black);
+    border: 1.5px solid var(--black);
+  }
+  .card.paper {
+    background: var(--paper);
+    color: var(--black);
+    border: 1px solid var(--gray-light);
+  }
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    opacity: 0.07;
+    position: absolute;
+    top: 8px; right: 16px;
+    letter-spacing: -0.02em;
+    pointer-events: none;
+  }
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+  }
+  .card-body {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.8;
+  }
+  .card-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    padding: 3px 8px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .two-col-wide {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* ── SLOGANS ── */
+  .slogan-grid {
+    columns: 2;
+    column-gap: 0;
+  }
+  @media (max-width: 700px) { .slogan-grid { columns: 1; } }
+  .slogan-item {
+    break-inside: avoid;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 0.5px solid var(--gray-light);
+  }
+  .slogan-n {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gray-mid);
+    min-width: 24px;
+  }
+  .slogan-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--black);
+    line-height: 1.1;
+  }
+
+  /* ── HASHTAGS ── */
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--black);
+    letter-spacing: 0.05em;
+    cursor: default;
+    transition: background 0.15s;
+  }
+  .tag:hover { background: var(--black); color: var(--white); }
+  .tag.primary { background: var(--black); color: var(--white); font-size: 14px; padding: 10px 18px; }
+  .tag.mid { font-size: 11px; opacity: 0.7; }
+  .tag.small { font-size: 10px; opacity: 0.5; }
+
+  /* ── TIKTOK IDEAS ── */
+  .tiktok-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2px;
+  }
+  .tiktok-card {
+    background: var(--black);
+    padding: 24px 20px;
+    position: relative;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .tiktok-card:nth-child(5n+2) { background: #111; }
+  .tiktok-card:nth-child(5n+3) { background: #161616; }
+  .tiktok-card:nth-child(5n+4) { background: #1a1a1a; }
+  .tiktok-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .tiktok-hook {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.3;
+    flex: 1;
+  }
+  .tiktok-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--white);
+    opacity: 0.07;
+    position: absolute;
+    bottom: 8px;
+    right: 14px;
+  }
+
+  /* ── CALENDAR ── */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .cal-day {
+    background: var(--black);
+    padding: 14px 12px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cal-day:nth-child(7n), .cal-day:nth-child(7n-1) { background: #1a1a1a; }
+  .cal-day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--white);
+    opacity: 0.3;
+  }
+  .cal-platform {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 0.2em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+  }
+  .cal-post {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  /* ── VOICE RULES ── */
+  .voice-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 8px;
+  }
+  .voice-yes { background: var(--black); padding: 28px 24px; }
+  .voice-no { background: #f0ede6; padding: 28px 24px; opacity: 0.6; }
+  .voice-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .voice-yes .voice-label { color: var(--gray-mid); }
+  .voice-no .voice-label { color: #888; }
+  .voice-ex {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+  .voice-yes .voice-ex { color: var(--white); }
+  .voice-no .voice-ex { color: var(--black); text-decoration: line-through; }
+
+  /* ── INFLUENCER ── */
+  .inf-tier {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+  .inf-card {
+    padding: 32px 24px;
+    border: 1.5px solid var(--black);
+  }
+  .inf-size {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .inf-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 16px;
+  }
+  .inf-desc {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--black);
+  }
+
+  /* ── VISUAL DIRECTION ── */
+  .vis-block {
+    padding: 28px 0;
+    border-bottom: 0.5px solid var(--gray-light);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .vis-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--black);
+  }
+  .vis-desc {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--black);
+  }
+
+  /* ── MANIFESTO BREAK ── */
+  .manifesto-break {
+    background: var(--black);
+    padding: 80px 60px;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .manifesto-break .big-q {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 64px);
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    max-width: 860px;
+    margin: 0 auto 24px;
+  }
+  .manifesto-break .attr {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+  }
+
+  /* ── COMPETITOR TABLE ── */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .comp-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--black);
+  }
+  .comp-table td {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 16px;
+    border-bottom: 0.5px solid var(--gray-light);
+    vertical-align: top;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table td:first-child {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .comp-table .pos { background: var(--black); color: var(--white); }
+  .comp-table .pos td { border-bottom: none; }
+  .comp-table .pos td:first-child { color: var(--white); }
+
+  /* ── MERCH GRID ── */
+  .merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+  }
+  .merch-item {
+    background: var(--black);
+    color: var(--white);
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .merch-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    opacity: 0.15;
+    letter-spacing: -0.02em;
+  }
+  .merch-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+  }
+  .merch-desc {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    opacity: 0.6;
+    line-height: 1.4;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--black);
+    margin: 48px 0;
+  }
+
+  /* ── LIST ── */
+  .list-clean {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .list-clean li {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 0.5px solid var(--gray-light);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .list-clean li::before {
+    content: '—';
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-mid);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── BANNER ── */
+  .banner {
+    background: var(--black);
+    padding: 24px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .banner-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+  .banner-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-mid);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    padding: 64px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .foot-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    line-height: 0.9;
+  }
+  .foot-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .foot-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .foot-list li {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    color: #888;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    section { padding: 100px 24px 60px; }
+    .two-col, .two-col-wide, .inf-tier, .voice-compare { grid-template-columns: 1fr; }
+    .cal-grid { grid-template-columns: repeat(4, 1fr); }
+    .vis-block { grid-template-columns: 1fr; gap: 8px; }
+    footer { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .manifesto-break { padding: 60px 24px; }
+    .banner { padding: 20px 24px; flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) {
+    .slogan-grid { columns: 1; }
+    .cal-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">POS</div>
+  <ul class="nav-links">
+    <li><a href="#strategy">Strategy</a></li>
+    <li><a href="#voice">Voice</a></li>
+    <li><a href="#slogans">Slogans</a></li>
+    <li><a href="#hashtags">Hashtags</a></li>
+    <li><a href="#tiktok">TikTok</a></li>
+    <li><a href="#instagram">Instagram</a></li>
+    <li><a href="#visual">Visual</a></li>
+    <li><a href="#ugc">UGC</a></li>
+    <li><a href="#influencer">Influencer</a></li>
+    <li><a href="#psychology">Psychology</a></li>
+    <li><a href="#calendar">Calendar</a></li>
+    <li><a href="#expansion">Expansion</a></li>
+    <li><a href="#competitors">Competitors</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">STRIKE</div>
+  <div class="hero-eyebrow">Campaign System · Full Creative Brief · 2025</div>
+  <div class="hero-name">
+    PETS<br>ON<br><span class="crossed">STRIKE</span>
+  </div>
+  <div class="hero-campaign">Feed the Revolution</div>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <div class="hero-stat-num">14</div>
+      <div class="hero-stat-label">Campaign Sections</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">50</div>
+      <div class="hero-stat-label">Slogans</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">50</div>
+      <div class="hero-stat-label">TikTok Concepts</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">30</div>
+      <div class="hero-stat-label">Day Calendar</div>
+    </div>
+  </div>
+</section>
+
+<!-- 01 STRATEGY -->
+<section id="strategy">
+  <p class="section-tag">01 — Campaign Strategy</p>
+  <h2 class="section-title">Feed the<br>Revolution</h2>
+
+  <div class="two-col-wide">
+    <div>
+      <p class="section-tag" style="margin-bottom:8px;">Core Concept</p>
+      <p style="font-family:'Barlow Condensed',sans-serif; font-size:22px; line-height:1.6; margin-bottom:32px;">The campaign positions kibble not as a food category but as a symbol of societal complacency — something pet parents unknowingly accepted without questioning it. Pets On Strike reframes freeze-dried raw food as an act of informed rebellion, not a premium upsell. The purchase becomes an identity statement.</p>
+
+      <p class="section-tag" style="margin-bottom:8px;">Emotional Positioning</p>
+      <ul class="list-clean" style="margin-bottom:32px;">
+        <li>Make pet owners feel like <strong>advocates</strong>, not just consumers</li>
+        <li>Position kibble-feeders as the silent majority who haven't woken up yet — no shame, just an invitation</li>
+        <li>The brand is a secret society your pet let you into</li>
+        <li>Every bag purchased is a vote cast for a better world for animals</li>
+      </ul>
+
+      <p class="section-tag" style="margin-bottom:8px;">Psychological Triggers</p>
+      <ul class="list-clean">
+        <li><strong>Identity signaling</strong> — "I'm the kind of person who reads the label"</li>
+        <li><strong>Moral licensing</strong> — buying this absolves guilt about not cooking for your pet</li>
+        <li><strong>In-group belonging</strong> — you're part of the revolution now</li>
+        <li><strong>Disgust activation</strong> — against by-products, fillers, and vague "meal" ingredients</li>
+        <li><strong>Social proof anxiety</strong> — everyone else's pets are already eating this</li>
+        <li><strong>Humor as disarmament</strong> — laughter drops defenses and opens wallets</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:2px;">
+        <span class="card-tag">Why It Works</span>
+        <h3 class="card-title">The Cult Brand Formula</h3>
+        <p class="card-body">Cult brands don't sell products. They sell worldviews. Glossier sells self-acceptance. Supreme sells scarcity. Pets On Strike sells moral clarity disguised as sarcasm. The brand gives hyper-online Millennials and Gen Z a cause that feels low-stakes (it's pet food) but emotionally high-value (it's for someone they love unconditionally).</p>
+      </div>
+      <div class="card" style="margin-bottom:2px;">
+        <span class="card-tag">Viral Potential</span>
+        <h3 class="card-title">Why People Will Share</h3>
+        <p class="card-body">The content makes people look funny and informed at the same time. Sharing a Pets On Strike video signals: "I care about my pet," "I have taste," and "I get the joke" — three distinct social wins in one share. That trifecta is how content escapes its audience and enters the general feed.</p>
+      </div>
+      <div class="card">
+        <span class="card-tag">Market Disruption</span>
+        <h3 class="card-title">The Blank Space</h3>
+        <p class="card-body">Premium pet food brands are either clinical (science-y, vet-approved, sterile) or twee (hand-painted illustrations, pastel fonts, soft vibes). Nobody owns the intersection of luxury and rebellion. That white space is entirely ours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 VOICE -->
+<section id="voice">
+  <p class="section-tag">02 — Brand Voice</p>
+  <h2 class="section-title">How We<br>Sound</h2>
+
+  <div class="card-grid" style="margin-bottom:2px;">
+    <div class="card">
+      <span class="card-tag">Trait 01</span>
+      <h3 class="card-title">Deadpan Serious</h3>
+      <p class="card-body">We never wink at our own jokes. The funnier it is, the straighter we play it. The brand speaks as if the pet rebellion is completely real and entirely justified.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Trait 02</span>
+      <h3 class="card-title">Quietly Savage</h3>
+      <p class="card-body">We don't yell. We don't rant. We make one surgical observation and walk away. The most devastating line in any post should feel like it just happened to you.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Trait 03</span>
+      <h3 class="card-title">Factually Armed</h3>
+      <p class="card-body">Every sarcastic claim is backed by a real truth. We weaponize actual ingredient facts, processing statistics, and nutritional data — but make them feel like punchlines.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Trait 04</span>
+      <h3 class="card-title">Internet-Native</h3>
+      <p class="card-body">We speak fluent meme without ever trying to sound young. We reference internet formats structurally — not by name-dropping them. The brand would never say "it's giving."</p>
+    </div>
+  </div>
+
+  <div class="voice-compare" style="margin-top:2px; margin-bottom:48px;">
+    <div class="voice-yes">
+      <p class="voice-label">✓ Write this</p>
+      <p class="voice-ex">"Your cat is currently judging you from the counter. She's read the ingredient list. Proceed accordingly."</p>
+    </div>
+    <div class="voice-no">
+      <p class="voice-label">✗ Not this</p>
+      <p class="voice-ex">"Give your fur baby the nourishment they deserve with our premium, all-natural freeze-dried treats! 🐾"</p>
+    </div>
+    <div class="voice-yes">
+      <p class="voice-label">✓ Write this</p>
+      <p class="voice-ex">"Corn syrup. Meat by-products. Artificial flavoring. The full list of things your dog eats because you haven't read the label yet."</p>
+    </div>
+    <div class="voice-no">
+      <p class="voice-label">✗ Not this</p>
+      <p class="voice-ex">"We believe every pet deserves only the finest ingredients, sourced with love and care for your family."</p>
+    </div>
+    <div class="voice-yes">
+      <p class="voice-label">✓ Write this</p>
+      <p class="voice-ex">"One ingredient. Chicken. The revolution doesn't need a long list."</p>
+    </div>
+    <div class="voice-no">
+      <p class="voice-label">✗ Not this</p>
+      <p class="voice-ex">"Crafted with love for optimal wellness and tail-wagging happiness! 🌿✨"</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Vocabulary We Use</p>
+      <div class="tag-cloud">
+        <span class="tag">Demands</span><span class="tag">Refuse</span><span class="tag">Canceled</span>
+        <span class="tag">The Revolution</span><span class="tag">Non-negotiable</span><span class="tag">Grievances</span>
+        <span class="tag">Strike</span><span class="tag">Real food</span><span class="tag">By-products</span>
+        <span class="tag">The label</span><span class="tag">Fillers</span><span class="tag">Processed</span>
+        <span class="tag">Overdue</span><span class="tag">Informed</span><span class="tag">Standards</span>
+        <span class="tag">Accountability</span><span class="tag">Deserve</span>
+      </div>
+    </div>
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Words We Never Use</p>
+      <div class="tag-cloud" style="opacity:0.4;">
+        <span class="tag">Fur baby</span><span class="tag">Wholesome</span><span class="tag">Yummy</span>
+        <span class="tag">Nourishing</span><span class="tag">Wellness journey</span><span class="tag">Tail-wagging</span>
+        <span class="tag">Natural goodness</span><span class="tag">Paw-some</span><span class="tag">Crafted with love</span>
+        <span class="tag">Premium blend</span><span class="tag">Optimal</span><span class="tag">Superfood</span>
+        <span class="tag">Purr-fect</span><span class="tag">Snuggle</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 SLOGANS -->
+<section id="slogans">
+  <p class="section-tag">03 — Slogans</p>
+  <h2 class="section-title">50 Viral<br>Lines</h2>
+
+  <div class="slogan-grid">
+    <div class="slogan-item"><span class="slogan-n">01</span><span class="slogan-text">Kibble is canceled.</span></div>
+    <div class="slogan-item"><span class="slogan-n">02</span><span class="slogan-text">Feed the revolution.</span></div>
+    <div class="slogan-item"><span class="slogan-n">03</span><span class="slogan-text">We demand better bowls.</span></div>
+    <div class="slogan-item"><span class="slogan-n">04</span><span class="slogan-text">Real food. Non-negotiable.</span></div>
+    <div class="slogan-item"><span class="slogan-n">05</span><span class="slogan-text">They're not begging. They're negotiating.</span></div>
+    <div class="slogan-item"><span class="slogan-n">06</span><span class="slogan-text">One ingredient. Zero apologies.</span></div>
+    <div class="slogan-item"><span class="slogan-n">07</span><span class="slogan-text">Read the label. Then explain yourself.</span></div>
+    <div class="slogan-item"><span class="slogan-n">08</span><span class="slogan-text">Your pet has standards. Do you?</span></div>
+    <div class="slogan-item"><span class="slogan-n">09</span><span class="slogan-text">No filler. No filter. No forgiveness.</span></div>
+    <div class="slogan-item"><span class="slogan-n">10</span><span class="slogan-text">The revolution will be freeze-dried.</span></div>
+    <div class="slogan-item"><span class="slogan-n">11</span><span class="slogan-text">By-products are not ingredients.</span></div>
+    <div class="slogan-item"><span class="slogan-n">12</span><span class="slogan-text">Your dog worked hard today. This is the least you can do.</span></div>
+    <div class="slogan-item"><span class="slogan-n">13</span><span class="slogan-text">Processed is a choice. So is this.</span></div>
+    <div class="slogan-item"><span class="slogan-n">14</span><span class="slogan-text">Corn syrup didn't make it on the label either.</span></div>
+    <div class="slogan-item"><span class="slogan-n">15</span><span class="slogan-text">Some unions are worth joining.</span></div>
+    <div class="slogan-item"><span class="slogan-n">16</span><span class="slogan-text">We checked what's in kibble. You should too.</span></div>
+    <div class="slogan-item"><span class="slogan-n">17</span><span class="slogan-text">Loyalty deserves better than corn meal.</span></div>
+    <div class="slogan-item"><span class="slogan-n">18</span><span class="slogan-text">They've been patient. Don't test it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">19</span><span class="slogan-text">Your cat already knows.</span></div>
+    <div class="slogan-item"><span class="slogan-n">20</span><span class="slogan-text">Ultra-processed is not a food group.</span></div>
+    <div class="slogan-item"><span class="slogan-n">21</span><span class="slogan-text">The kibble era is over.</span></div>
+    <div class="slogan-item"><span class="slogan-n">22</span><span class="slogan-text">Feeding real food isn't extreme. Not feeding it is.</span></div>
+    <div class="slogan-item"><span class="slogan-n">23</span><span class="slogan-text">If you wouldn't eat it, don't serve it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">24</span><span class="slogan-text">A dog who loves you unconditionally deserves conditions you can pronounce.</span></div>
+    <div class="slogan-item"><span class="slogan-n">25</span><span class="slogan-text">We're not premium. We're just actual food.</span></div>
+    <div class="slogan-item"><span class="slogan-n">26</span><span class="slogan-text">Raised a revolution. Fed it properly.</span></div>
+    <div class="slogan-item"><span class="slogan-n">27</span><span class="slogan-text">Your pet went on strike. You went shopping. Good.</span></div>
+    <div class="slogan-item"><span class="slogan-n">28</span><span class="slogan-text">The label shouldn't need a chemistry degree.</span></div>
+    <div class="slogan-item"><span class="slogan-n">29</span><span class="slogan-text">New rule: if it's not food, don't call it food.</span></div>
+    <div class="slogan-item"><span class="slogan-n">30</span><span class="slogan-text">They forgive everything. Feed them like it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">31</span><span class="slogan-text">The silent protest was the empty bowl.</span></div>
+    <div class="slogan-item"><span class="slogan-n">32</span><span class="slogan-text">Not a trend. A reckoning.</span></div>
+    <div class="slogan-item"><span class="slogan-n">33</span><span class="slogan-text">Ingredients: chicken. That's our whole speech.</span></div>
+    <div class="slogan-item"><span class="slogan-n">34</span><span class="slogan-text">We didn't invent real food. We just stopped apologizing for it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">35</span><span class="slogan-text">Freeze-dried: because fresh is better when it's permanent.</span></div>
+    <div class="slogan-item"><span class="slogan-n">36</span><span class="slogan-text">Join the side with better snacks.</span></div>
+    <div class="slogan-item"><span class="slogan-n">37</span><span class="slogan-text">They tolerate a lot. They shouldn't have to tolerate filler.</span></div>
+    <div class="slogan-item"><span class="slogan-n">38</span><span class="slogan-text">The revolution has a very good smell.</span></div>
+    <div class="slogan-item"><span class="slogan-n">39</span><span class="slogan-text">Kibble had a good run. It's over now.</span></div>
+    <div class="slogan-item"><span class="slogan-n">40</span><span class="slogan-text">Every bag is a vote against the status quo.</span></div>
+    <div class="slogan-item"><span class="slogan-n">41</span><span class="slogan-text">Management has been notified. Management has been found wanting.</span></div>
+    <div class="slogan-item"><span class="slogan-n">42</span><span class="slogan-text">We know what's in the bag. We made sure of it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">43</span><span class="slogan-text">The dogs were always right.</span></div>
+    <div class="slogan-item"><span class="slogan-n">44</span><span class="slogan-text">This is not a treat. This is a settlement.</span></div>
+    <div class="slogan-item"><span class="slogan-n">45</span><span class="slogan-text">No corn. No soy. No excuses.</span></div>
+    <div class="slogan-item"><span class="slogan-n">46</span><span class="slogan-text">Freeze-dried or forget it.</span></div>
+    <div class="slogan-item"><span class="slogan-n">47</span><span class="slogan-text">Their loyalty has no terms and conditions. Your food should.</span></div>
+    <div class="slogan-item"><span class="slogan-n">48</span><span class="slogan-text">Side with the animals. They were always going to win.</span></div>
+    <div class="slogan-item"><span class="slogan-n">49</span><span class="slogan-text">Demand better. They already do.</span></div>
+    <div class="slogan-item"><span class="slogan-n">50</span><span class="slogan-text">This is what care actually looks like.</span></div>
+  </div>
+</section>
+
+<!-- 04 HASHTAGS -->
+<section id="hashtags">
+  <p class="section-tag">04 — Hashtag Strategy</p>
+  <h2 class="section-title">Tag<br>System</h2>
+
+  <div class="two-col">
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Branded — Always Use</p>
+      <div class="tag-cloud" style="margin-bottom:32px;">
+        <span class="tag primary">#PetsOnStrike</span>
+        <span class="tag primary">#FeedTheRevolution</span>
+        <span class="tag primary">#KibbleIsCanceled</span>
+        <span class="tag primary">#POSCo</span>
+        <span class="tag primary">#ThePetBillOfRights</span>
+      </div>
+
+      <p class="section-tag" style="margin-bottom:16px;">Campaign Specific</p>
+      <div class="tag-cloud" style="margin-bottom:32px;">
+        <span class="tag">#MyPetsDemands</span>
+        <span class="tag">#WeDemandBetterBowls</span>
+        <span class="tag">#SettlementTreats</span>
+        <span class="tag">#TheRevolutionIsFreezeDried</span>
+        <span class="tag">#KibbleEra</span>
+        <span class="tag">#ReadTheLabel</span>
+        <span class="tag">#RealFoodRealPets</span>
+        <span class="tag">#UnionRep</span>
+      </div>
+
+      <p class="section-tag" style="margin-bottom:16px;">UGC & Community</p>
+      <div class="tag-cloud">
+        <span class="tag mid">#OnStrikeForGoodFood</span>
+        <span class="tag mid">#PetParentRevolution</span>
+        <span class="tag mid">#FreezeIsBetter</span>
+        <span class="tag mid">#MyDogsDemands</span>
+        <span class="tag mid">#MyCatsDemands</span>
+        <span class="tag mid">#StrikeFace</span>
+        <span class="tag mid">#NegotiatingWithMyDog</span>
+        <span class="tag mid">#PetUnion</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Niche Reach</p>
+      <div class="tag-cloud" style="margin-bottom:32px;">
+        <span class="tag small">#RawFeeding</span>
+        <span class="tag small">#FreezeDriedRaw</span>
+        <span class="tag small">#RealIngredients</span>
+        <span class="tag small">#ByeByeKibble</span>
+        <span class="tag small">#WholePreyDiet</span>
+        <span class="tag small">#PetNutrition</span>
+        <span class="tag small">#AntiUltraProcessed</span>
+        <span class="tag small">#CleanIngredients</span>
+        <span class="tag small">#ReadPetFoodLabels</span>
+        <span class="tag small">#RawDogFood</span>
+        <span class="tag small">#PetFoodTransparency</span>
+        <span class="tag small">#WholeFoodForPets</span>
+      </div>
+
+      <p class="section-tag" style="margin-bottom:16px;">Viral / Discovery</p>
+      <div class="tag-cloud">
+        <span class="tag small">#PetTok</span>
+        <span class="tag small">#DogMom</span>
+        <span class="tag small">#CatTok</span>
+        <span class="tag small">#PetMemes</span>
+        <span class="tag small">#PetParent</span>
+        <span class="tag small">#FoodieForPets</span>
+        <span class="tag small">#DogsOfTikTok</span>
+        <span class="tag small">#CatsOfInstagram</span>
+        <span class="tag small">#LuxuryPets</span>
+        <span class="tag small">#PetLifestyle</span>
+        <span class="tag small">#HotGirlsHavePets</span>
+        <span class="tag small">#PetTikTok</span>
+        <span class="tag small">#AnimalInternet</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 TIKTOK -->
+<section id="tiktok">
+  <p class="section-tag">05 — TikTok System</p>
+  <h2 class="section-title">50 Video<br>Concepts</h2>
+
+  <div class="tiktok-grid">
+    <div class="tiktok-card"><div class="tiktok-type">POV</div><div class="tiktok-hook">"POV: your dog just read the ingredient list on their kibble bag"</div><div class="tiktok-num">01</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Rage Bait</div><div class="tiktok-hook">"I zoomed in on a popular kibble label so you don't have to. I wish I hadn't."</div><div class="tiktok-num">02</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Documentary</div><div class="tiktok-hook">Title card: "Day 1 of the strike. Management offered kibble. Negotiations have broken down."</div><div class="tiktok-num">03</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Emotional</div><div class="tiktok-hook">"Your dog has never complained once. Not once. Think about that."</div><div class="tiktok-num">04</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Educational</div><div class="tiktok-hook">"What 'meat by-product' actually means vs what you think it means"</div><div class="tiktok-num">05</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Comparison</div><div class="tiktok-hook">"What I eat for breakfast vs what I was feeding my dog for breakfast"</div><div class="tiktok-num">06</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Reaction</div><div class="tiktok-hook">Dog reacts to freeze-dried chicken vs kibble. The silence on the second bowl says everything.</div><div class="tiktok-num">07</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Stitch Bait</div><div class="tiktok-hook">"Tell me what's in your pet's food without looking it up. I'll wait."</div><div class="tiktok-num">08</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Funny</div><div class="tiktok-hook">"My cat has been sending formal complaints. I found them. They're addressed 'to whom it may concern.'"</div><div class="tiktok-num">09</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Education</div><div class="tiktok-hook">"Freeze-drying explained in 30 seconds by someone who was also confused"</div><div class="tiktok-num">10</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Meme Format</div><div class="tiktok-hook">"Things my dog deserves: the list. Things in his kibble: also a list. They don't overlap."</div><div class="tiktok-num">11</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">POV</div><div class="tiktok-hook">"POV: you're a pet food executive watching dogs refuse your product on TikTok"</div><div class="tiktok-num">12</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Guilt</div><div class="tiktok-hook">"You read every label at the grocery store for yourself. Just saying."</div><div class="tiktok-num">13</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Unboxing</div><div class="tiktok-hook">Dramatic unboxing of a POS bag. Slow motion. Extreme close-up. No talking. Product does the work.</div><div class="tiktok-num">14</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Comparison</div><div class="tiktok-hook">"Feeding kibble: $30/month. The vet bills that could have been prevented: [redacted]"</div><div class="tiktok-num">15</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Protest Bit</div><div class="tiktok-hook">Dog holds a handmade sign: "WILL WORK FOR REAL FOOD." Owner looks directly at camera.</div><div class="tiktok-num">16</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Dark Humor</div><div class="tiktok-hook">"A study by absolutely everyone with eyes: dogs prefer not eating corn."</div><div class="tiktok-num">17</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Trend Remix</div><div class="tiktok-hook">This or that: "corn syrup vs chicken. corn syrup vs chicken. corn syrup vs chicken." Pet pic each time.</div><div class="tiktok-num">18</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Series</div><div class="tiktok-hook">"Union Reps, Episode 1: My Golden Retriever Files an Official Grievance" [voice-over format]</div><div class="tiktok-num">19</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">ASMR Adjacent</div><div class="tiktok-hook">Close-up: POS chicken strip placed in bowl. Dog approaches. Sound of crunch. End card.</div><div class="tiktok-num">20</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Facts Drop</div><div class="tiktok-hook">"The FDA allows 4D meat in pet food. Look it up. We'll be here."</div><div class="tiktok-num">21</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Duet Bait</div><div class="tiktok-hook">Cat sitting with empty bowl. Title: "She says nothing. She doesn't have to." Duet with your own cat.</div><div class="tiktok-num">22</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Conspiracy</div><div class="tiktok-hook">"Why are kibble ingredients so hard to find explained? Thread." [deadpan delivery]</div><div class="tiktok-num">23</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Switch</div><div class="tiktok-hook">"Week 1 on freeze-dried. Week 4 on freeze-dried. The coat speaks."</div><div class="tiktok-num">24</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Wholesome Twist</div><div class="tiktok-hook">"My dog has no idea a revolution is happening. She just knows breakfast is better."</div><div class="tiktok-num">25</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Newscast</div><div class="tiktok-hook">"Breaking: local pets have issued demands. Officials are taking it seriously."</div><div class="tiktok-num">26</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Anti-Influencer</div><div class="tiktok-hook">"We're not going to tell you this changed our dog's life. We'll let the blood work do that."</div><div class="tiktok-num">27</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">POV Flip</div><div class="tiktok-hook">"POV: the bag of kibble watching the freeze-dried bag arrive"</div><div class="tiktok-num">28</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Legal Format</div><div class="tiktok-hook">Pet's demand letter read aloud in full legal voice. Dry. Devastating.</div><div class="tiktok-num">29</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Curiosity</div><div class="tiktok-hook">"I switched. Here's what happened in 30 days. Nobody is going to like number 7."</div><div class="tiktok-num">30</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Hot Take</div><div class="tiktok-hook">"Spending $200 on pet toys but $1.50/day on food is an interesting priority order."</div><div class="tiktok-num">31</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Silent</div><div class="tiktok-hook">No sound. Dog stares at camera. Slow zoom. Title: "He knows." End card: POS logo.</div><div class="tiktok-num">32</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Science</div><div class="tiktok-hook">"Ultra-processed food for humans: public health crisis. Ultra-processed food for pets: just Tuesday?"</div><div class="tiktok-num">33</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Founder Story</div><div class="tiktok-hook">"I read the ingredient list on a Sunday. By Monday, this brand existed."</div><div class="tiktok-num">34</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Blind Taste</div><div class="tiktok-hook">Hidden camera. Dog ignores kibble, destroys POS treat in under 3 seconds. Slow replay.</div><div class="tiktok-num">35</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Contrast</div><div class="tiktok-hook">"Luxury pet bed: $400. Luxury pet food: somehow the radical ask."</div><div class="tiktok-num">36</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Community</div><div class="tiktok-hook">"We read every comment. The pets have spoken. New flavor drops Friday."</div><div class="tiktok-num">37</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Fake Ad</div><div class="tiktok-hook">Generic pet food commercial parody. Chipper voice, upbeat music. Cut to black: "Or just feed them real food."</div><div class="tiktok-num">38</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Q&A</div><div class="tiktok-hook">"Answering the most asked question: is freeze-dried actually better? (Yes. Here's why.)"</div><div class="tiktok-num">39</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Culture</div><div class="tiktok-hook">"The girlies are raw feeding. The girlies have always known."</div><div class="tiktok-num">40</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Accountability</div><div class="tiktok-hook">"You have a standing grocery list for yourself. Your pet's food hasn't changed in 3 years."</div><div class="tiktok-num">41</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Mythology</div><div class="tiktok-hook">"Ancient dogs: ate meat. Modern dogs: corn syrup glaze. Something happened."</div><div class="tiktok-num">42</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Obsessed Owner</div><div class="tiktok-hook">"Things I've optimized: sleep, coffee, water, my own diet, my wardrobe, my dog's food. In that order. Don't judge me."</div><div class="tiktok-num">43</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Ingredient Read</div><div class="tiktok-hook">Reading the ingredient list of a top-selling kibble brand, straight to camera, no commentary. Just the list.</div><div class="tiktok-num">44</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Testimonial Twist</div><div class="tiktok-hook">"My cat didn't review this. She just ate it. That's the whole testimonial."</div><div class="tiktok-num">45</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Morning Routine</div><div class="tiktok-hook">"What my dog eats in a day" — minimal, beautiful, single ingredient. The contrast makes the point.</div><div class="tiktok-num">46</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Protest Visual</div><div class="tiktok-hook">Dog staged with picket sign outside a pet store. Time-lapse of people walking by, looking, smiling.</div><div class="tiktok-num">47</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Election Style</div><div class="tiktok-hook">"Polling data: 100% of dogs surveyed prefer real chicken over 'poultry by-product meal.' Sample size: every dog."</div><div class="tiktok-num">48</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Plot Twist</div><div class="tiktok-hook">"The most expensive thing about owning a pet is the vet. The cheapest fix is the food."</div><div class="tiktok-num">49</div></div>
+    <div class="tiktok-card"><div class="tiktok-type">Closing Call</div><div class="tiktok-hook">"The revolution is already happening. Your pet is already on strike. You just haven't noticed yet."</div><div class="tiktok-num">50</div></div>
+  </div>
+</section>
+
+<!-- 06 INSTAGRAM -->
+<section id="instagram">
+  <p class="section-tag">06 — Instagram Strategy</p>
+  <h2 class="section-title">Grid &amp;<br>Content</h2>
+
+  <div class="card-grid" style="margin-bottom:40px;">
+    <div class="card">
+      <span class="card-tag">Carousel 01</span>
+      <h3 class="card-title">The Ingredient Audit</h3>
+      <p class="card-body">Slide 1: "We audited 10 top kibble brands." Slides 2–9: one brand per slide, key offending ingredient highlighted. Slide 10: "One ingredient. Chicken." Save rate will be enormous.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Carousel 02</span>
+      <h3 class="card-title">The Pet Bill of Rights</h3>
+      <p class="card-body">10-slide formal document design. Each article: "Article I: The right to food that was once food." Framed like the Declaration of Independence but in Bebas Neue on black.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Carousel 03</span>
+      <h3 class="card-title">Before / After: 30 Days</h3>
+      <p class="card-body">Real customer before/after photos: coat, energy, poop (yes), enthusiasm at bowl. Let the results speak without testimonial language. Data format, not lifestyle format.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Reel 01</span>
+      <h3 class="card-title">The Morning Protest</h3>
+      <p class="card-body">60-second, cinematic. Dog wakes up, looks at empty bowl, walks to owner, stares. Text: "He doesn't ask for much." Cut to POS bag. "He gets what he asks for." Full B&W filter.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Reel 02</span>
+      <h3 class="card-title">Ingredient Speed Round</h3>
+      <p class="card-body">Fast-cut. Ingredients of a kibble brand flashing on screen at full speed. Hard cut to: "CHICKEN." Hold for 3 seconds. POS end card. No music. Just beats.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Meme 01</span>
+      <h3 class="card-title">The Expectation Gap</h3>
+      <p class="card-body">Left: "Me eating organic, locally sourced, grass-fed food." Right: "What I was giving my dog." The silence in this gap is the entire brand message.</p>
+    </div>
+    <div class="card light">
+      <span class="card-tag">Poll</span>
+      <h3 class="card-title">Story Engagement</h3>
+      <p class="card-body">"Have you ever read your pet's ingredient list?" Yes / I'm scared to. Next story: the most common offender in the top 5 brands. Results drive to bio link.</p>
+    </div>
+    <div class="card light">
+      <span class="card-tag">Comment Bait</span>
+      <h3 class="card-title">Name Their Demands</h3>
+      <p class="card-body">Post a photo of a sternly-looking pet. Caption: "She just filed a formal complaint with HR. What's demand #1?" Comments become UGC goldmine. Pin the best reply.</p>
+    </div>
+    <div class="card light">
+      <span class="card-tag">Story Series</span>
+      <h3 class="card-title">Union Meeting</h3>
+      <p class="card-body">Weekly recurring story: "The Union Meets Monday." Structured like meeting minutes — Old Business (last week's kibble rejection), New Business (new flavor drop), Motions (community votes).</p>
+    </div>
+  </div>
+
+  <div class="banner">
+    <div>
+      <div class="banner-text">Grid Philosophy: Black. White. No Exceptions.</div>
+      <div class="banner-sub">Every post is B&W photography or B&W graphic design. Color is never used. The feed IS the manifesto.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 VISUAL -->
+<section id="visual">
+  <p class="section-tag">07 — Visual Direction</p>
+  <h2 class="section-title">The Look<br>System</h2>
+
+  <div class="vis-block">
+    <div class="vis-label">Photography</div>
+    <div class="vis-desc">High-contrast black and white. Film grain overlay mandatory — not digital noise, film grain. Natural light only. No studio flash. Pets photographed at eye level or below, never from above. The pet is always the main subject. Shallow depth of field. Product appears in frame as incidentally as possible.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Lighting</div>
+    <div class="vis-desc">Raking side-light for textures. Overcast window light for portraits. No ring lights. No artificial softboxes. Shadows are not enemies — use them. The goal is photojournalism, not product photography.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Typography</div>
+    <div class="vis-desc">Bebas Neue for protest headlines — always large, always aggressive in scale. Barlow Condensed Italic for wit and secondary statements. Space Mono for data, ingredients, and legal-style text. Never mix more than two typefaces in one piece. Kerning is tight. Leading is tighter. Type should feel like it means business.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Color System</div>
+    <div class="vis-desc">Riot Black (#0D0D0D), Pamphlet White (#F5F2EB), Concrete (#9E9B94), Asphalt (#3A3A38). No brand colors. No accent colors. Ever. The only contrast is tonal. Treat the absence of color as the most premium choice available.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Graffiti Elements</div>
+    <div class="vis-desc">Used sparingly. Never decorative. Graffiti appears as a protest mark — a stamp, a scrawl, a stenciled slogan over an existing surface. Think Banksy placement logic: the graffiti is always ideologically placed, not aesthetically placed. A "CANCELED" stamp over a kibble bag image. A "REAL FOOD" stencil on a wall behind a dog.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Post Layout</div>
+    <div class="vis-desc">Two formats only: (1) Full-bleed photo with minimal type overlay, bottom-anchored. (2) Pure graphic — black background, white Bebas type, one bold statement. No templates. No Canva energy. Every post looks like it was made by someone who owns a protest press.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Product in Frame</div>
+    <div class="vis-desc">The bag appears in context, never on a white background. On a concrete floor. On a kitchen counter that looks lived-in. Next to a dog's paw. Never floating. Never hero-shot. The product has enough confidence that it doesn't need special lighting.</div>
+  </div>
+  <div class="vis-block">
+    <div class="vis-label">Luxury Rebellion</div>
+    <div class="vis-desc">The aesthetic reference points: Raf Simons lookbooks, Supreme drops, Celine editorial, Virgil Abloh's type-on-type. The luxury comes from restraint and precision. The rebellion comes from what you say, not how chaotic the design is. Clean is radical when everyone else is cluttered.</div>
+  </div>
+</section>
+
+<!-- MANIFESTO BREAK -->
+<div class="manifesto-break">
+  <div class="big-q">"The loudest thing a brand can do is use silence, negative space, and one true sentence."</div>
+  <div class="attr">— Pets On Strike Design Manifesto, Section 3</div>
+</div>
+
+<!-- 08 UGC -->
+<section id="ugc">
+  <p class="section-tag">08 — UGC Strategy</p>
+  <h2 class="section-title">The People's<br>Content</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="card-tag">Challenge 01</span>
+      <h3 class="card-title">#MyPetsDemands</h3>
+      <p class="card-body">Pet owners write their pet's formal demands on a piece of paper (or sticky note) and photograph the pet holding it. Results are reshared in Stories. Top demands voted on monthly. Winner becomes a new product flavor name.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Challenge 02</span>
+      <h3 class="card-title">The Strike Face</h3>
+      <p class="card-body">Submit your pet's most judgmental, disappointed face. Caption it with their "official complaint." We compile the best into a monthly Strike Report graphic. Every submission is a shareable asset.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Challenge 03</span>
+      <h3 class="card-title">Before/After Bowl</h3>
+      <p class="card-body">Old food vs POS food. Side by side. Filmed at the same angle, same lighting. The pet's reaction does the selling. Community rules: no dramatic music, no voice-over. Let the truth do it.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Activation</span>
+      <h3 class="card-title">First Day of Real Food</h3>
+      <p class="card-body">New customers tag their first POS unboxing. We reply to every single one for the first 6 months. The reply IS the marketing. A brand that sees you builds loyalty faster than any ad.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Ongoing</span>
+      <h3 class="card-title">Protest Sign Wall</h3>
+      <p class="card-body">Digital community board on website: every #MyPetsDemands submission lives here. Updated live. Shareable link. Each pet gets their own panel. The wall grows forever.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Ambassador Tier</span>
+      <h3 class="card-title">Union Rep Program</h3>
+      <p class="card-body">Top UGC contributors graduate to "Union Rep" status. Quarterly supply drops. Early access to new flavors. Co-creation credit. Their pet appears in official brand materials. No paid contracts — earned status only.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 09 INFLUENCER -->
+<section id="influencer">
+  <p class="section-tag">09 — Influencer Strategy</p>
+  <h2 class="section-title">Creator<br>System</h2>
+
+  <div class="inf-tier" style="margin-bottom:2px;">
+    <div class="inf-card">
+      <div class="inf-size">MICRO</div>
+      <div class="inf-title">1K–50K · Trust Tier</div>
+      <div class="inf-desc">Pet parents, raw feeders, vet techs, dog trainers. High engagement, high trust. These creators convert. Free product plus affiliate code. 15% commission. Brief: "Tell the truth."</div>
+    </div>
+    <div class="inf-card">
+      <div class="inf-size">MID</div>
+      <div class="inf-title">50K–500K · Reach Tier</div>
+      <div class="inf-desc">Lifestyle creators, pet-forward accounts, Gen Z pet parents. Creator brief: "Don't tell them what it is. Show them what it does." Fee-based partnerships. Full creative freedom on format.</div>
+    </div>
+    <div class="inf-card">
+      <div class="inf-size">MACRO</div>
+      <div class="inf-title">500K+ · Signal Tier</div>
+      <div class="inf-desc">One or two strategic placements per quarter. Selected for cultural cache, not reach numbers. These aren't ad deals — they're collaborations. Co-designed product drops, not posts.</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:40px;">
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Outreach Message (Micro)</p>
+      <div class="card" style="background:var(--paper); color:var(--black); border:1.5px solid var(--black);">
+        <p style="font-family:'Barlow Condensed',sans-serif; font-size:17px; line-height:1.7; font-style:italic;">"Hey [Name], we've been watching your content and you're clearly the kind of person who reads the label. We make a freeze-dried pet food brand called Pets On Strike — one ingredient, no exceptions. We're not looking for a promotion. We're looking for someone who'd genuinely try it and say what they think. Want a box? No strings. Just honest feedback from you and [pet name]."</p>
+      </div>
+    </div>
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Creator Content Prompts</p>
+      <ul class="list-clean">
+        <li>Film your pet's reaction to their first POS treat. No staging. No retakes.</li>
+        <li>Read the ingredient list of your pet's current food. On camera. Out loud.</li>
+        <li>Do the "switch" for 30 days and report back. Weekly updates.</li>
+        <li>Interview your vet about ultra-processed pet food. Bring the receipts.</li>
+        <li>Film the moment you realize what's been in the bag this whole time.</li>
+        <li>Create your pet's official demand list. Post it formally.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10 PRODUCT INTEGRATION -->
+<section id="integration">
+  <p class="section-tag">10 — Product Integration</p>
+  <h2 class="section-title">In the<br>Wild</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="card-tag">TikTok</span>
+      <h3 class="card-title">Incidental Hero</h3>
+      <p class="card-body">The bag is in frame but not the point. The pet is the point. The POS bag sits on the counter while the dog does something real. The logo is readable. That's enough. Never hold the product to camera.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Reels</span>
+      <h3 class="card-title">Close Detail</h3>
+      <p class="card-body">Extreme close-up of freeze-dried pieces. Texture. Color. Then the pet's nose entering frame. The product sells itself under this kind of honest scrutiny. Let the camera stay on it too long.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Photography</span>
+      <h3 class="card-title">Context Over Staging</h3>
+      <p class="card-body">The bag lives where it actually lives — near the food bowl, on a kitchen shelf, on a floor next to a dog bed. Real kitchens. Real mess. Real textures. The product doesn't need a clean background to look premium.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Stories</span>
+      <h3 class="card-title">The Daily Check-In</h3>
+      <p class="card-body">Stories are where the product shows up most casually. "Today's breakfast" — one frame, the bowl with POS pieces, the dog waiting. That's it. Consistency of this format builds more brand recognition than any polished campaign.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Influencer</span>
+      <h3 class="card-title">Process Not Product</h3>
+      <p class="card-body">Show rehydrating, show portioning, show the smell reaction. The process of using freeze-dried is more compelling than the product shot. The product is the prop. The ritual is the sell.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">Memes</span>
+      <h3 class="card-title">Logo as Shorthand</h3>
+      <p class="card-body">The P.O.S. monogram or the crossed-out wordmark becomes a meme element itself. Community starts using it as a stamp on their own content. Brand becomes a visual language, not just a product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 PSYCHOLOGY -->
+<section id="psychology">
+  <p class="section-tag">11 — Viral Psychology</p>
+  <h2 class="section-title">Why They<br>Share</h2>
+
+  <div class="two-col">
+    <div>
+      <ul class="list-clean">
+        <li><strong>Identity confirmation:</strong> Sharing POS content signals "I'm a good pet parent, and a smart consumer." Two identities, one share.</li>
+        <li><strong>Disgust activation:</strong> Once someone learns what 4D meat or corn syrup glaze is, they can't un-know it. The urge to share disgust is evolutionary.</li>
+        <li><strong>Moral recruitment:</strong> Sharing feels like inviting others to make the right choice. It's informing, not promoting.</li>
+        <li><strong>Humor as social currency:</strong> Funny pet content about a serious topic makes the sharer look socially aware and witty. That's a powerful reward.</li>
+        <li><strong>Rage bait (targeted):</strong> The ingredient list content makes people angry — not at POS, but at the status quo. They share to recruit others into the outrage.</li>
+        <li><strong>Nostalgia disruption:</strong> "I didn't know" is a powerful emotional state. Content that reveals something creates a before/after in the viewer's own narrative.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:2px;">
+        <span class="card-tag">Curiosity Triggers</span>
+        <h3 class="card-title">The Incomplete Statement</h3>
+        <p class="card-body">"We read the ingredient list on 10 kibble brands. Slide 7 made us put the bag down." The viewer has to complete the loop. They scroll. They share because they need others to feel what they felt.</p>
+      </div>
+      <div class="card" style="margin-bottom:2px;">
+        <span class="card-tag">Rage Bait</span>
+        <h3 class="card-title">Surgical Fact Drops</h3>
+        <p class="card-body">We never rage. We inform — flatly, precisely, without commentary. That restraint makes the fact hit harder. "The FDA allows this in pet food" followed by silence is more enraging than an angry rant.</p>
+      </div>
+      <div class="card">
+        <span class="card-tag">Relatability</span>
+        <h3 class="card-title">The Hypocrite Recognition</h3>
+        <p class="card-body">"I read every label for myself but not for them" is a universal guilt most pet owners have felt and suppressed. When content names that guilt with humor, the relief of recognition makes people share immediately.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 CALENDAR -->
+<section id="calendar">
+  <p class="section-tag">12 — Content Calendar</p>
+  <h2 class="section-title">30 Day<br>Launch</h2>
+
+  <div class="cal-grid" style="margin-bottom:2px;">
+    <!-- Week 1 -->
+    <div class="cal-day"><div class="cal-day-num">01</div><div class="cal-platform">Instagram</div><div class="cal-post">Launch: "The revolution has started." Black card. Logo. Link in bio.</div></div>
+    <div class="cal-day"><div class="cal-day-num">02</div><div class="cal-platform">TikTok</div><div class="cal-post">Founder video: "I read the label on a Sunday." No edits. One cut.</div></div>
+    <div class="cal-day"><div class="cal-day-num">03</div><div class="cal-platform">IG + TT</div><div class="cal-post">Carousel: "The Pet Bill of Rights" — all 10 articles.</div></div>
+    <div class="cal-day"><div class="cal-day-num">04</div><div class="cal-platform">TikTok</div><div class="cal-post">Ingredient audit: top-selling kibble brand. Read the label. No commentary.</div></div>
+    <div class="cal-day"><div class="cal-day-num">05</div><div class="cal-platform">Instagram</div><div class="cal-post">Meme: "Me vs. my pet's food" split. Comment bait activated.</div></div>
+    <div class="cal-day"><div class="cal-day-num">06</div><div class="cal-platform">Stories</div><div class="cal-post">Poll: "Have you read your pet's ingredient list?" Results tomorrow.</div></div>
+    <div class="cal-day"><div class="cal-day-num">07</div><div class="cal-platform">Stories</div><div class="cal-post">Reveal poll results. "74% said no. Here's what's in the bag." Link drop.</div></div>
+    <!-- Week 2 -->
+    <div class="cal-day"><div class="cal-day-num">08</div><div class="cal-platform">TikTok</div><div class="cal-post">POV: your cat reading the kibble label. Slow zoom. No sound.</div></div>
+    <div class="cal-day"><div class="cal-day-num">09</div><div class="cal-platform">Instagram</div><div class="cal-post">Photo: POS bag on kitchen counter. Dog visible in background. Caption: "One ingredient."</div></div>
+    <div class="cal-day"><div class="cal-day-num">10</div><div class="cal-platform">IG + TT</div><div class="cal-post">Launch #MyPetsDemands challenge. Template in Stories. Pin first community entry.</div></div>
+    <div class="cal-day"><div class="cal-day-num">11</div><div class="cal-platform">TikTok</div><div class="cal-post">Union Reps, Episode 1: voice-over demand letter. Deadpan. Legal format.</div></div>
+    <div class="cal-day"><div class="cal-day-num">12</div><div class="cal-platform">Instagram</div><div class="cal-post">Repost first 3 UGC entries. Reply to every one. Comment on comments.</div></div>
+    <div class="cal-day"><div class="cal-day-num">13</div><div class="cal-platform">TikTok</div><div class="cal-post">Blind taste test: kibble vs POS. No staging. Let the dog decide.</div></div>
+    <div class="cal-day"><div class="cal-day-num">14</div><div class="cal-platform">All</div><div class="cal-post">Week 2 recap: "The demands are coming in." Compile top #MyPetsDemands.</div></div>
+    <!-- Week 3 -->
+    <div class="cal-day"><div class="cal-day-num">15</div><div class="cal-platform">TikTok</div><div class="cal-post">Education: what freeze-drying actually does. 60 seconds. No fluff.</div></div>
+    <div class="cal-day"><div class="cal-day-num">16</div><div class="cal-platform">Instagram</div><div class="cal-post">Carousel: "30 days on freeze-dried. Here are the results." Real customer data.</div></div>
+    <div class="cal-day"><div class="cal-day-num">17</div><div class="cal-platform">TikTok</div><div class="cal-post">Influencer Micro #1 goes live. Engage within 1 hour of posting.</div></div>
+    <div class="cal-day"><div class="cal-day-num">18</div><div class="cal-platform">Stories</div><div class="cal-post">Q&A: "Ask your pet's union rep anything." Respond in character all day.</div></div>
+    <div class="cal-day"><div class="cal-day-num">19</div><div class="cal-platform">TikTok</div><div class="cal-post">"The most asked question: is it expensive?" Honest answer. No spin.</div></div>
+    <div class="cal-day"><div class="cal-day-num">20</div><div class="cal-platform">Instagram</div><div class="cal-post">Comment bait: "Name your pet's demand #1." Pin 5 best responses.</div></div>
+    <div class="cal-day"><div class="cal-day-num">21</div><div class="cal-platform">All</div><div class="cal-post">First Strike Report: monthly community grievances compiled. Full graphic post.</div></div>
+    <!-- Week 4 -->
+    <div class="cal-day"><div class="cal-day-num">22</div><div class="cal-platform">TikTok</div><div class="cal-post">Union Reps, Episode 2: second creator's take. Different pet, same demands.</div></div>
+    <div class="cal-day"><div class="cal-day-num">23</div><div class="cal-platform">Instagram</div><div class="cal-post">Product carousel: the flavors. Each slide = one ingredient. That's the carousel.</div></div>
+    <div class="cal-day"><div class="cal-day-num">24</div><div class="cal-platform">TikTok</div><div class="cal-post">"What I wish I knew before switching" — practical, honest, fast.</div></div>
+    <div class="cal-day"><div class="cal-day-num">25</div><div class="cal-platform">Stories</div><div class="cal-post">Countdown to new flavor. One clue per story. Community guesses.</div></div>
+    <div class="cal-day"><div class="cal-day-num">26</div><div class="cal-platform">Instagram</div><div class="cal-post">First Union Rep community member featured. Their pet's story. Their demands.</div></div>
+    <div class="cal-day"><div class="cal-day-num">27</div><div class="cal-platform">TikTok</div><div class="cal-post">Influencer Micro #2 + #3 posts. Engage. Share to Stories.</div></div>
+    <div class="cal-day"><div class="cal-day-num">28</div><div class="cal-platform">All</div><div class="cal-post">New flavor drop. No fanfare. Just: "New ingredient. [Protein name]. That's the announcement."</div></div>
+    <div class="cal-day"><div class="cal-day-num">29</div><div class="cal-platform">TikTok</div><div class="cal-post">Month wrap: "30 days of the revolution. The demands were heard." Community footage montage.</div></div>
+    <div class="cal-day"><div class="cal-day-num">30</div><div class="cal-platform">All</div><div class="cal-post">State of the Strike address. Stats: followers gained, UGC pieces, demands filed. Real numbers. No vanity spin.</div></div>
+  </div>
+</section>
+
+<!-- 13 EXPANSION -->
+<section id="expansion">
+  <p class="section-tag">13 — Campaign Expansion</p>
+  <h2 class="section-title">What Comes<br>Next</h2>
+
+  <div class="two-col" style="margin-bottom:48px;">
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Seasonal Campaigns</p>
+      <ul class="list-clean">
+        <li><strong>New Year's:</strong> "New Year, New Label. Read it." — Resolution framing, no toxic positivity</li>
+        <li><strong>Valentine's Day:</strong> "They love you unconditionally. The least you can do is read the bag." — Guilt as love language</li>
+        <li><strong>Summer:</strong> "The Revolution Doesn't Take a Summer Off." — BBQ-adjacent pet treat campaign</li>
+        <li><strong>Halloween:</strong> "What's scarier: your costume, or your pet's ingredient list?" — Limited horror-label design run</li>
+        <li><strong>Holiday:</strong> "They didn't ask for a sweater. They asked for real food." — Anti-gift-for-pets angle</li>
+      </ul>
+    </div>
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Future Campaigns</p>
+      <ul class="list-clean">
+        <li><strong>Phase 2 — "The Settlement":</strong> Pets formally accept the revolution's terms. Product range expands. New visual chapter.</li>
+        <li><strong>Phase 3 — "Solidarity":</strong> Pet and owner campaign. You're both eating better now. Campaign about the household transformation.</li>
+        <li><strong>Phase 4 — "The Verdict":</strong> Community-generated case against ultra-processed pet food. Visual courtroom aesthetic. Petition element.</li>
+        <li><strong>Collab:</strong> Capsule collection with an independent pet artist — limited protest posters. Art print comes with every bag for a week.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-tag" style="margin-bottom:20px;">Merch &amp; Physical Extensions</p>
+  <div class="merch-grid">
+    <div class="merch-item"><div class="merch-icon">TEE</div><div class="merch-name">Protest Tee</div><div class="merch-desc">Black. White Bebas text. "KIBBLE IS CANCELED" on chest. Heavyweight cotton. Runs only once per year.</div></div>
+    <div class="merch-item"><div class="merch-icon">TTE</div><div class="merch-name">Tote</div><div class="merch-desc">Natural canvas. One-color stamp print. "READ THE LABEL." Reusable. Goes everywhere with the pet.</div></div>
+    <div class="merch-item"><div class="merch-icon">EMB</div><div class="merch-name">Embroidered Patch</div><div class="merch-desc">POS union badge. Iron-on. Given free with orders over a threshold. Goes on anything. Walking billboard.</div></div>
+    <div class="merch-item"><div class="merch-icon">ZIN</div><div class="merch-name">The Strike Zine</div><div class="merch-desc">Quarterly. The Pet Bill of Rights expanded. Interviews. Photography. 12 pages. Free with first order. Collectible.</div></div>
+    <div class="merch-item"><div class="merch-icon">BOX</div><div class="merch-name">Starter Kit</div><div class="merch-desc">The "Join the Strike" box. 3 flavors, the zine, a patch, a protest sticker sheet. The entire brand in one unboxing.</div></div>
+    <div class="merch-item"><div class="merch-icon">PUP</div><div class="merch-name">Pet Bandana</div><div class="merch-desc">"ON STRIKE" in Bebas Neue. Black and natural linen. The pet wears the message. UGC creation engine.</div></div>
+  </div>
+
+  <div class="two-col" style="margin-top:48px;">
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Guerrilla Marketing</p>
+      <ul class="list-clean">
+        <li>Wheatpaste protest posters in major cities' dog-park adjacent walls: "KIBBLE IS CANCELED" with city coordinates</li>
+        <li>QR code stickers on dog-park benches linking to the Pet Bill of Rights — with no brand logo. Just the QR.</li>
+        <li>Leave POS sample bags with no brand info, just a handstamp: "Someone thought your dog deserved better."</li>
+        <li>Protest chalk stencil campaign near pet stores — "READ THE LABEL" with arrow pointing to store entrance</li>
+      </ul>
+    </div>
+    <div>
+      <p class="section-tag" style="margin-bottom:16px;">Pop-Up Concepts</p>
+      <ul class="list-clean">
+        <li>The Strike Headquarters: a black-and-white pop-up that looks like a union office. Chalkboard walls. File cabinets. Pet food samples.</li>
+        <li>The Ingredient Wall: floor-to-ceiling ingredient lists of popular kibble brands. People walk through them to reach the POS counter.</li>
+        <li>Pet Portraits Day: free B&W pet photo session. The photographer does 100 shots. Brand gets content. Pet parent gets art.</li>
+        <li>The Label Audit Station: bring any pet food bag. We read the ingredients with you. On camera.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 14 COMPETITORS -->
+<section id="competitors">
+  <p class="section-tag">14 — Competitor Differentiation</p>
+  <h2 class="section-title">The<br>Landscape</h2>
+
+  <table class="comp-table" style="margin-bottom:2px;">
+    <thead>
+      <tr>
+        <th>Brand Type</th>
+        <th>Their Positioning</th>
+        <th>Their Aesthetic</th>
+        <th>Their Weakness</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mainstream Kibble<br>(Purina, Royal Canin)</td>
+        <td>Science-backed, vet-recommended, trusted institution. Safety as selling point.</td>
+        <td>Clinical, sterile, authoritative. Blue and white. Serif fonts. Institutional trust signals.</td>
+        <td>Ingredients that don't survive scrutiny. Marketing depends on low consumer awareness. Ultra-processed reality hidden behind "research" framing.</td>
+      </tr>
+      <tr>
+        <td>Traditional Premium<br>(Orijen, Acana)</td>
+        <td>Biologically appropriate, sourced ingredients, serious pet food for serious owners.</td>
+        <td>Dark, natural, earthy. Photography-forward. Serious and informational. No humor.</td>
+        <td>No cultural resonance. Not shareable. Speaks to existing raw feeders, not to converting the mainstream. Feels like a niche, not a movement.</td>
+      </tr>
+      <tr>
+        <td>Luxury Pet Brands<br>(The Farmer's Dog, Ollie)</td>
+        <td>Fresh, human-grade, subscription-convenient. Wellness positioning. Feel-good premium.</td>
+        <td>Millennial pink or neutral tones. Soft photography. Wholesome and warm. Wellness aesthetic.</td>
+        <td>Soft, agreeable, and very stealable positioning. No edge. No community identity. Premium without rebellion. Interchangeable with the next entrant.</td>
+      </tr>
+      <tr>
+        <td>Raw Feeding Community</td>
+        <td>Informed, passionate, community-driven. The "we know the truth" market.</td>
+        <td>No unified aesthetic. Facebook groups. Before/after photos. Organic but unpolished.</td>
+        <td>No single brand voice. No movement-scale content. Evangelism without an icon to rally behind.</td>
+      </tr>
+      <tr class="pos">
+        <td>Pets On Strike</td>
+        <td>The revolution. We don't sell better food — we expose a broken system and invite people to cross the picket line.</td>
+        <td>Black and white. Film grain. Protest typography. Luxury rebellion. No other brand looks like this.</td>
+        <td>— (We occupy this space alone)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card-grid" style="margin-top:2px;">
+    <div class="card">
+      <span class="card-tag">The Moat</span>
+      <h3 class="card-title">Aesthetic Ownership</h3>
+      <p class="card-body">No pet brand owns black-and-white luxury rebellion. The white space is total. The moment POS establishes this aesthetic, it becomes the reference point. Everyone else will look like they're copying or avoiding it.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">The Moat</span>
+      <h3 class="card-title">Cultural Identity</h3>
+      <p class="card-body">POS isn't a pet food brand that has a personality. It's a cultural identity that happens to sell pet food. The difference: one can be copied. The other can't. You can't fake being a movement.</p>
+    </div>
+    <div class="card">
+      <span class="card-tag">The Moat</span>
+      <h3 class="card-title">Community Architecture</h3>
+      <p class="card-body">The Union Rep structure, the Strike Report, the Pet Bill of Rights — these aren't campaigns. They're institutions. Institutions outlast any product launch and can't be replicated by a competitor's marketing team in a quarter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="foot-brand">PETS<br>ON<br>STRIKE</div>
+    <p style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gray-mid); margin-top:16px; letter-spacing:0.1em;">Feed the Revolution</p>
+  </div>
+  <div>
+    <p class="foot-label">Document Contains</p>
+    <ul class="foot-list">
+      <li>Full Campaign Strategy</li>
+      <li>Brand Voice Guidelines</li>
+      <li>50 Viral Slogans</li>
+      <li>Hashtag Architecture</li>
+      <li>50 TikTok Concepts</li>
+      <li>Instagram Strategy</li>
+      <li>Visual Direction System</li>
+      <li>UGC + Influencer Strategy</li>
+      <li>Viral Psychology</li>
+      <li>30-Day Calendar</li>
+      <li>Expansion Roadmap</li>
+      <li>Competitor Analysis</li>
+    </ul>
+  </div>
+  <div>
+    <p class="foot-label">Campaign Handles</p>
+    <ul class="foot-list">
+      <li>@PETS_ON_STRIKE</li>
+      <li>#FeedTheRevolution</li>
+      <li>#KibbleIsCanceled</li>
+      <li>#PetsOnStrike</li>
+      <li>#MyPetsDemands</li>
+    </ul>
+    <p class="foot-label" style="margin-top:24px;">Status</p>
+    <p style="font-family:'Barlow Condensed',sans-serif; font-size:16px; color:#555;">The revolution is ready.<br>The pets have been waiting.</p>
+  </div>
+</footer>
+
+</body>
+</html>
